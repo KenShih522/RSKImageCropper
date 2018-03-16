@@ -81,7 +81,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 {
     self = [super init];
     if (self) {
-        _avoidEmptySpaceAroundImage = NO;
+        _avoidEmptySpaceAroundImage = YES;
         _alwaysBounceVertical = NO;
         _alwaysBounceHorizontal = NO;
         _applyMaskToCroppedImage = NO;
@@ -128,7 +128,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 
 - (BOOL)prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 - (void)viewDidLoad
@@ -140,7 +140,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.view.clipsToBounds = YES;
     
     [self.view addSubview:self.imageScrollView];
@@ -148,6 +148,10 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
     [self.view addSubview:self.moveAndScaleLabel];
     [self.view addSubview:self.cancelButton];
     [self.view addSubview:self.chooseButton];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:RSKLocalizedString(@"Next", @"Choose button") style:UIBarButtonItemStylePlain target:self action:@selector(onChooseButtonTouch:)];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:RSKLocalizedString(@"Cancel", @"Cancel button") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonTouch:)];
     
     [self.view addGestureRecognizer:self.doubleTapGestureRecognizer];
     [self.view addGestureRecognizer:self.rotationGestureRecognizer];
@@ -157,39 +161,39 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 {
     [super viewWillAppear:animated];
     
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        self.originalStatusBarHidden = application.statusBarHidden;
-        [application setStatusBarHidden:YES];
-    }
-    
-    self.originalNavigationControllerNavigationBarHidden = self.navigationController.navigationBarHidden;
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-    
-    self.originalNavigationControllerNavigationBarShadowImage = self.navigationController.navigationBar.shadowImage;
-    self.navigationController.navigationBar.shadowImage = nil;
+//    UIApplication *application = [UIApplication rsk_sharedApplication];
+//    if (application) {
+//        self.originalStatusBarHidden = application.statusBarHidden;
+//        [application setStatusBarHidden:YES];
+//    }
+//
+//    self.originalNavigationControllerNavigationBarHidden = self.navigationController.navigationBarHidden;
+//    [self.navigationController setNavigationBarHidden:YES animated:NO];
+//
+//    self.originalNavigationControllerNavigationBarShadowImage = self.navigationController.navigationBar.shadowImage;
+//    self.navigationController.navigationBar.shadowImage = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    self.originalNavigationControllerViewBackgroundColor = self.navigationController.view.backgroundColor;
-    self.navigationController.view.backgroundColor = [UIColor blackColor];
+//    self.originalNavigationControllerViewBackgroundColor = self.navigationController.view.backgroundColor;
+//    self.navigationController.view.backgroundColor = [UIColor blackColor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        [application setStatusBarHidden:self.originalStatusBarHidden];
-    }
-    
-    [self.navigationController setNavigationBarHidden:self.originalNavigationControllerNavigationBarHidden animated:animated];
-    self.navigationController.navigationBar.shadowImage = self.originalNavigationControllerNavigationBarShadowImage;
-    self.navigationController.view.backgroundColor = self.originalNavigationControllerViewBackgroundColor;
+//    UIApplication *application = [UIApplication rsk_sharedApplication];
+//    if (application) {
+//        [application setStatusBarHidden:self.originalStatusBarHidden];
+//    }
+//
+//    [self.navigationController setNavigationBarHidden:self.originalNavigationControllerNavigationBarHidden animated:animated];
+//    self.navigationController.navigationBar.shadowImage = self.originalNavigationControllerNavigationBarShadowImage;
+//    self.navigationController.view.backgroundColor = self.originalNavigationControllerViewBackgroundColor;
 }
 
 - (void)viewWillLayoutSubviews
@@ -321,7 +325,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 - (UIColor *)maskLayerColor
 {
     if (!_maskLayerColor) {
-        _maskLayerColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.7f];
+        _maskLayerColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.4f];
     }
     return _maskLayerColor;
 }
@@ -335,6 +339,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         _moveAndScaleLabel.text = RSKLocalizedString(@"Move and Scale", @"Move and Scale label");
         _moveAndScaleLabel.textColor = [UIColor whiteColor];
         _moveAndScaleLabel.opaque = NO;
+        [_moveAndScaleLabel setHidden:true];
     }
     return _moveAndScaleLabel;
 }
@@ -347,6 +352,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         [_cancelButton setTitle:RSKLocalizedString(@"Cancel", @"Cancel button") forState:UIControlStateNormal];
         [_cancelButton addTarget:self action:@selector(onCancelButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
         _cancelButton.opaque = NO;
+        [_cancelButton setHidden:true];
     }
     return _cancelButton;
 }
@@ -359,6 +365,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         [_chooseButton setTitle:RSKLocalizedString(@"Choose", @"Choose button") forState:UIControlStateNormal];
         [_chooseButton addTarget:self action:@selector(onChooseButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
         _chooseButton.opaque = NO;
+        [_chooseButton setHidden:true];
     }
     return _chooseButton;
 }
